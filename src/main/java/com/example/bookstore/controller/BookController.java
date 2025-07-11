@@ -1,73 +1,60 @@
 package com.example.bookstore.controller;
 
-import com.example.bookstore.model.Book;
-import com.example.bookstore.repository.BookRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.example.bookstore.dto.BookDto;
+import com.example.bookstore.dto.CreateBookRequestDto;
+import com.example.bookstore.service.BookService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import static com.example.bookstore.repository.SpecificationUtils.*;
-
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 
 @RestController
 @RequestMapping("/api/books")
-@Tag(name = "Book Management", description = "APIs for creating, retrieving, and managing books")
+@Tag(name = "Book Management System", description = "Operations pertaining to books in Bookstore")
 public class BookController {
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookService bookService;
 
+    public BookController(BookService bookService) {
+        this.bookService = bookService;
+    }
 
+    @Operation(summary = "Create a new book", security = @SecurityRequirement(name = "basicAuth"))
     @PostMapping
-    public Book createBook(@RequestBody Book book) {
-        return bookRepository.save(book);
+    public ResponseEntity<BookDto> createBook(@Valid @RequestBody CreateBookRequestDto requestDto) {
+        BookDto createdBook = bookService.createBook(requestDto);
+        return new ResponseEntity<>(createdBook, HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Get a list of books with optional filters",
-            description = "Returns a paginated list of books. Can be filtered by title, publication year, and author name.")
-    @ApiResponse(responseCode = "200", description = "Successfully retrieved list")
+    @Operation(summary = "Get a list of all books (paginated)")
     @GetMapping
-    public Page<Book> getBooks(
-            @RequestParam(required = false) String title,
-            @RequestParam(required = false) Integer year,
-            @RequestParam(required = false) String authorName,
-            Pageable pageable) {
-
-        Specification<Book> spec = Specification.where(null);
-
-        if (title != null) {
-            spec = spec.and(hasTitle(title));
-        }
-        if (year != null) {
-            spec = spec.and(publishedInYear(year));
-        }
-        if (authorName != null) {
-            spec = spec.and(hasAuthor(authorName));
-        }
-
-        return bookRepository.findAll(spec, pageable);
+    public Page<BookDto> getAllBooks(Pageable pageable) {
+        return bookService.getAllBooks(pageable);
     }
 
-
+    @Operation(summary = "Get a book by ID")
     @GetMapping("/{id}")
-    public ResponseEntity<Book> getBookById(@PathVariable Long id) {
-        return bookRepository.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+    public ResponseEntity<BookDto> getBookById(@PathVariable Long id) {
+        BookDto bookDto = bookService.getBookById(id);
+        return ResponseEntity.ok(bookDto);
     }
 
+    @Operation(summary = "Update an existing book", security = @SecurityRequirement(name = "basicAuth"))
+    @PutMapping("/{id}")
+    public ResponseEntity<BookDto> updateBook(@PathVariable Long id, @Valid @RequestBody CreateBookRequestDto requestDto) {
+        BookDto updatedBook = bookService.updateBook(id, requestDto);
+        return ResponseEntity.ok(updatedBook);
+    }
+
+    @Operation(summary = "Delete a book", security = @SecurityRequirement(name = "basicAuth"))
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteBook(@PathVariable Long id) {
-        return bookRepository.findById(id)
-                .map(book -> {
-                    bookRepository.delete(book);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElse(ResponseEntity.notFound().build());
+        bookService.deleteBook(id);
+        return ResponseEntity.noContent().build();
     }
 }
