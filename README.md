@@ -1,10 +1,6 @@
 # RESTful Bookstore API
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/8323869/148679039-4b684803-3435-42c1-8451-91a5477c73a4.png" alt="Bookstore API Banner" width="600"/>
-</p>
-
-<p align="center">
   A professional-grade, production-ready REST API for managing a bookstore's collection of books and authors.
 </p>
 
