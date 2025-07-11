@@ -18,11 +18,11 @@
 
 ---
 
-## 🚀 Overview
+## Overview
 
 This project is a complete backend solution built with **Java and Spring Boot**. It demonstrates best practices in modern API development, including a clean, layered architecture, robust security, and comprehensive documentation. It serves as an excellent reference for building scalable and maintainable enterprise-level applications.
 
-## ✨ Core Features
+## Core Features
 
 | Feature                  | Description                                                                                                                           |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
@@ -39,7 +39,7 @@ This project is a complete backend solution built with **Java and Spring Boot**.
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Category         | Technology / Library                                                                                   |
 | ---------------- | ------------------------------------------------------------------------------------------------------ |
@@ -54,7 +54,7 @@ This project is a complete backend solution built with **Java and Spring Boot**.
 
 ---
 
-## ⚙️ Getting Started
+## Getting Started
 
 Follow these instructions to get the project up and running on your local machine.
 
@@ -78,7 +78,7 @@ Follow these instructions to get the project up and running on your local machin
    ```bash
    mvnw spring-boot:run
 
-## 🚀 API Usage
+## API Usage
 
 Once running, the API provides several resources for interacting with the application.
 
@@ -113,27 +113,11 @@ To use protected endpoints (like `POST` or `DELETE`), you must provide credentia
 
 ---
 
-## 🏛️ Project Structure
+## Project Structure
 
 The project follows a standard layered architecture to ensure separation of concerns and scalability.
 
-└── src
-└── main
-├── java
-│ └── com/example/bookstore
-│ ├── config // Security configurations
-│ ├── controller // API endpoints (REST Controllers)
-│ ├── dto // Data Transfer Objects
-│ ├── exception // Global exception handlers
-│ ├── mapper // MapStruct mappers
-│ ├── model // JPA entities
-│ ├── repository // Spring Data JPA repositories
-│ └── service // Business logic
-└── resources
-├── static
-├── templates
-└── application.properties // Application configuration
-
+![Project Structure Screenshot](src/main/resources/static/assets/ProjectStructure.png)
 
 <hr>
 
